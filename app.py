@@ -2,14 +2,12 @@
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import os
-import openai
 import collections.abc
 from pptx import Presentation
 from pptx.util import Inches
 import random 
 import re
 import requests
-openai.api_key = "YOUR_API_KEY"
 app = Flask(__name__)
 
 limiter = Limiter(
