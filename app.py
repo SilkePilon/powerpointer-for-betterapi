@@ -8,7 +8,7 @@ from pptx import Presentation
 from pptx.util import Inches
 import random 
 import re
-
+import requests
 openai.api_key = "YOUR_API_KEY"
 app = Flask(__name__)
 
@@ -17,7 +17,7 @@ limiter = Limiter(
     default_limits=["10 per day"], #This is the rate limit, you can remove it if you want
 )
 
-Prompt = """Write a presentation/powerpoint about the user's topic. You only answer with the presentation. Follow the structure of the example.
+Prompt = """Write a presentation/powerpoint text about the user's topic. You only answer with the presentation text. Follow the structure of the example.
 Notice
 -You do all the presentation text for the user.
 -You write the texts no longer than 250 characters!
@@ -56,16 +56,9 @@ Example! - Stick to this formatting exactly!
 #Slide: END"""
 
 def create_ppt_text(Input):
-    response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": (Prompt)},
-            {"role": "user", "content": ("The user wants a presentation about " + Input)}
-        ],
-        temperature=0.5,
-    )
+    response = requests.get("https://api.betterapi.net/youdotcom/chat?message=" + Prompt + "The user wants a presentation about: " + Input+ "&key=site")
 
-    return response['choices'][0]['message']['content']
+    return response['message']
 
 def create_ppt(text_file, design_number, ppt_name):
     prs = Presentation(f"Designs/Design-{design_number}.pptx")
